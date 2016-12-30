@@ -13,9 +13,15 @@ Runs on:
 ## Command line
 Jointercept [port]
 
-Example:
-`Jointercept`
-`Jointercept 12345`
+Examples:
+```
+Jointercept
+```
+```
+Jointercept 12345
+```
 
 # Usage:
 Just place your programs or scripts _(yes, you can invoke a program from anywhere on the computer using shell scripts)_ under the Join-AutoStart folder! It will now be called with the message as command line argument!
+
+Also, make sure to set the "EventGhost Port" in Join to whatever port you start Jointercept with!
