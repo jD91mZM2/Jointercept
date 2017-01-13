@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 	"io/ioutil"
-	"os/exec"
 	"strings"
 )
 
@@ -32,9 +31,8 @@ func handler(w http.ResponseWriter, r *http.Request){
 			if(strings.HasSuffix(name, ".txt")){
 				continue;
 			}
-			
-			cmd := exec.Command(SH, C, "\"" + strconv.Quote(name) + "\" \"" + strconv.Quote(msg) + "\"");
-			err := cmd.Start();
+
+			err := execcmd(name, msg);
 			if(err != nil){
 				fmt.Fprintln(os.Stderr, "Warning: Couldn't start " + name + ": \"" + err.Error() + "\"");
 			}
