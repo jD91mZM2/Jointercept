@@ -5,7 +5,6 @@ import (
 	"strconv"
 )
 
-func execcmd(name string, arg string) error{
-	cmd := exec.Command("sh", "-c", strconv.Quote(name) + " " + strconv.Quote(arg));
-	return cmd.Start();
+func makecmd(name string, arg string) *exec.Cmd{
+	return exec.Command("sh", "-c", strconv.Quote(name) + " " + strconv.Quote(arg));
 }

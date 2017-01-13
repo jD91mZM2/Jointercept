@@ -4,7 +4,6 @@ import (
 	"os/exec"
 )
 
-func execcmd(name string, arg string) error{
-	cmd := exec.Command("cmd", "/c", name, arg);
-	return cmd.Start();
+func makecmd(name string, arg string) *exec.Cmd{
+	return exec.Command("cmd", "/c", name, arg);
 }
