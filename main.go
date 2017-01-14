@@ -27,20 +27,18 @@ func handler(w http.ResponseWriter, r *http.Request){
 		mkdir();
 		programs, _ := ioutil.ReadDir(DIR);
 		for _, program := range programs{
-			name := "./" + program.Name();
+			name := program.Name();
 			if(strings.HasSuffix(name, ".txt")){
 				continue;
 			}
 
 			cmd := makecmd(name, msg);
 			cmd.Dir = "Join-AutoStart";
-			//out, err := cmd.Output();
 			err := cmd.Start();
 
 			if(err != nil){
 				fmt.Fprintln(os.Stderr, "Warning: Couldn't start " + name + ": \"" + err.Error() + "\"");
 			}
-			//fmt.Println(string(out));
 		}
 	}
 
