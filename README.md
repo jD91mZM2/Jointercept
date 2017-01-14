@@ -3,7 +3,7 @@ Jointercept stands for Join Intercept and is a replacements for the buggy EventG
 
 Runs on:
 - Linux (Tested)
-- Windows
+- Windows (Fixed, thanks to [Kenneth Pang](https://plus.google.com/u/0/+KennethPang))
 - Should be able to be fixed quite easily. (maybe even renaming \_linux to \_whatever I don't know)
 
 ## Pros with using Jointercept:
