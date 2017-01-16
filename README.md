@@ -6,9 +6,12 @@ Runs on:
 - Windows (Fixed, thanks to [Kenneth Pang](https://plus.google.com/u/0/+KennethPang))
 - Should be able to be fixed quite easily. (maybe even renaming \_linux to \_whatever I don't know)
 
-## Pros with using Jointercept:
+## Pros using Jointercept rather than a custom program:
 1. Compatibility with multiple programs!!
 2. Cleaner and easier code!
+## Pros using Jointercept rather than a URL protocol:
+1. Intercept all messages rather than specific ones.
+2. Cross platform.
 
 ## Command line
 Jointercept [port]
