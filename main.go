@@ -7,25 +7,44 @@ import (
 	"strconv"
 	"io/ioutil"
 	"strings"
+	"github.com/legolord208/stdutil"
+	"path/filepath"
+	"html/template"
+	"time"
 )
 
+type logItem struct{
+	Msg string
+	Time string
+}
+var log = make([]logItem, 0);
+
+const TIME_FORMAT = "03:04:05PM";
 const DIR = "Join-AutoStart";
-const WEBINFO = "Hello =)\n" +
-				"I am being used by Jointercept right now.\n" +
-				"You can change my port by supplying them in my arguments.\n" +
-				"Thank you!";
+var README = filepath.Join(DIR, "README.txt");
 const DIRINFO = "All programs in here are automatically ran by Jointercept\n" +
 				"when a Join message is received. It is ran with the\n" +
 				"message itself as a command line argument. Have fun!";
 
 func handler(w http.ResponseWriter, r *http.Request){
 	msg := r.FormValue("message");
-	
-	if(len(msg) > 0){
+
+	if(msg != ""){
+		now := time.Now();
+
 		fmt.Println("Intercepted \"" + msg + "\"");
+		log = append(log, logItem{
+			Msg: msg,
+			Time: now.Format(TIME_FORMAT),
+		});
 
 		mkdir();
-		programs, _ := ioutil.ReadDir(DIR);
+		programs, err := ioutil.ReadDir(DIR);
+		if(err != nil){
+			stdutil.PrintErr("Couldn't read directory", err);
+			return;
+		}
+
 		for _, program := range programs{
 			name := program.Name();
 			if(strings.HasSuffix(name, ".txt")){
@@ -37,17 +56,25 @@ func handler(w http.ResponseWriter, r *http.Request){
 			err := cmd.Start();
 
 			if(err != nil){
-				fmt.Fprintln(os.Stderr, "Warning: Couldn't start " + name + ": \"" + err.Error() + "\"");
+				stdutil.PrintErr("Warning: Couldn't start " + name, err);
 			}
 		}
+	} else {
+		t := template.Must(template.New("Jointercept").Parse(TEMPLATE));
+		t.Execute(w, log);
 	}
-
-	fmt.Fprintln(w, WEBINFO);
 }
 
 func mkdir(){
-	_ = os.Mkdir(DIR, 0777);
-	_ = ioutil.WriteFile(DIR + "/README.txt", []byte(DIRINFO), 0644);
+	err := os.Mkdir(DIR, 0755);
+	if(err != nil && !os.IsExist(err)){
+		stdutil.PrintErr("Error creating directory", err);
+	}
+
+	err = ioutil.WriteFile(README, []byte(DIRINFO), 0666);
+	if(err != nil && !os.IsExist(err)){
+		stdutil.PrintErr("Error creating README", err);
+	}
 }
 
 func main(){
@@ -58,6 +85,8 @@ func main(){
 		_, err := strconv.Atoi(args[0]);
 		if(err == nil){
 			port = args[0];
+		} else {
+			stdutil.PrintErr("Argument is not a number", nil);
 		}
 	}
 	fmt.Println("Service starting at port " + port + "!");
@@ -67,6 +96,6 @@ func main(){
 	http.HandleFunc("/", handler);
 	err := http.ListenAndServe(":" + port, nil);
 	if(err != nil){
-		fmt.Fprintln(os.Stderr, "Error! Couldn't serve website!");
+		stdutil.PrintErr("Error! Couldn't serve website", err);
 	}
 }
