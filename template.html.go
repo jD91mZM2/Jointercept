@@ -1,4 +1,4 @@
-package main;
+package main
 
 const TEMPLATE = `
 <!DOCTYPE html>
@@ -51,4 +51,4 @@ tr:hover{
 		</div>
 	</body>
 </html>
-`;
+`

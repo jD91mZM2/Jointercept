@@ -1,101 +1,104 @@
-package main;
+package main
 
 import (
 	"fmt"
-	"os"
-	"net/http"
-	"strconv"
-	"io/ioutil"
-	"strings"
 	"github.com/legolord208/stdutil"
-	"path/filepath"
 	"html/template"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
 	"time"
 )
 
-type logItem struct{
-	Msg string
+type logItem struct {
+	Msg  string
 	Time string
 }
-var log = make([]logItem, 0);
 
-const TIME_FORMAT = "03:04:05PM";
-const DIR = "Join-AutoStart";
-var README = filepath.Join(DIR, "README.txt");
+var log = make([]logItem, 0)
+
+const TIME_FORMAT = "03:04:05PM"
+const DIR = "Join-AutoStart"
+
+var README = filepath.Join(DIR, "README.txt")
+
 const DIRINFO = "All programs in here are automatically ran by Jointercept\n" +
-				"when a Join message is received. It is ran with the\n" +
-				"message itself as a command line argument. Have fun!";
+	"when a Join message is received. It is ran with the\n" +
+	"message itself as a command line argument. Have fun!"
 
-func handler(w http.ResponseWriter, r *http.Request){
-	msg := r.FormValue("message");
+func handler(w http.ResponseWriter, r *http.Request) {
+	msg := r.FormValue("message")
 
-	if(msg != ""){
-		now := time.Now();
+	if msg != "" {
+		now := time.Now()
 
-		fmt.Println("Intercepted \"" + msg + "\"");
+		fmt.Println("Intercepted \"" + msg + "\"")
 		log = append(log, logItem{
-			Msg: msg,
+			Msg:  msg,
 			Time: now.Format(TIME_FORMAT),
-		});
+		})
 
-		mkdir();
-		programs, err := ioutil.ReadDir(DIR);
-		if(err != nil){
-			stdutil.PrintErr("Couldn't read directory", err);
-			return;
+		mkdir()
+		programs, err := ioutil.ReadDir(DIR)
+		if err != nil {
+			stdutil.PrintErr("Couldn't read directory", err)
+			return
 		}
 
-		for _, program := range programs{
-			name := program.Name();
-			if(strings.HasSuffix(name, ".txt")){
-				continue;
+		for _, program := range programs {
+			name := program.Name()
+			if strings.HasSuffix(name, ".txt") {
+				continue
 			}
 
-			cmd := makecmd(name, msg);
-			cmd.Dir = "Join-AutoStart";
-			err := cmd.Start();
+			cmd := makecmd(name, msg)
+			cmd.Dir = "Join-AutoStart"
+			err := cmd.Start()
 
-			if(err != nil){
-				stdutil.PrintErr("Warning: Couldn't start " + name, err);
+			if err != nil {
+				stdutil.PrintErr("Warning: Couldn't start "+name, err)
 			}
 		}
 	} else {
-		t := template.Must(template.New("Jointercept").Parse(TEMPLATE));
-		t.Execute(w, log);
+		t := template.Must(template.New("Jointercept").Parse(TEMPLATE))
+		t.Execute(w, log)
 	}
 }
 
-func mkdir(){
-	err := os.Mkdir(DIR, 0755);
-	if(err != nil && !os.IsExist(err)){
-		stdutil.PrintErr("Error creating directory", err);
+func mkdir() {
+	err := os.Mkdir(DIR, 0755)
+	if err != nil && !os.IsExist(err) {
+		stdutil.PrintErr("Error creating directory", err)
 	}
 
-	err = ioutil.WriteFile(README, []byte(DIRINFO), 0666);
-	if(err != nil && !os.IsExist(err)){
-		stdutil.PrintErr("Error creating README", err);
+	err = ioutil.WriteFile(README, []byte(DIRINFO), 0666)
+	if err != nil && !os.IsExist(err) {
+		stdutil.PrintErr("Error creating README", err)
 	}
 }
 
-func main(){
-	port := "8080";
+func main() {
+	port := "8080"
 
-	args := os.Args[1:];
-	if(len(args) >= 1){
-		_, err := strconv.Atoi(args[0]);
-		if(err == nil){
-			port = args[0];
+	args := os.Args[1:]
+	if len(args) >= 1 {
+		_, err := strconv.Atoi(args[0])
+		if err == nil {
+			port = args[0]
 		} else {
-			stdutil.PrintErr("Argument is not a number", nil);
+			stdutil.PrintErr("Argument is not a number", nil)
 		}
 	}
-	fmt.Println("Service starting at port " + port + "!");
-	fmt.Println("Visible at http://localhost:" + port + "/. Change port in arguments.");
-	mkdir();
+	fmt.Println("Service starting at port " + port + "!")
+	fmt.Println("Visible at http://localhost:" + port + "/. Change port in arguments.")
+	mkdir()
 
-	http.HandleFunc("/", handler);
-	err := http.ListenAndServe(":" + port, nil);
-	if(err != nil){
-		stdutil.PrintErr("Error! Couldn't serve website", err);
+	http.HandleFunc("/", handler)
+	err := http.ListenAndServe(":"+port, nil)
+	if err != nil {
+		stdutil.PrintErr("Error! Couldn't serve website", err)
 	}
 }
