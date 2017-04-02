@@ -29,6 +29,9 @@ const DIRINFO = "All programs in here are automatically ran by Jointercept\n" +
 	"when a Join message is received. It is ran with the\n" +
 	"message itself as a command line argument. Have fun!"
 
+var TEMPLATE = template.Must(template.New("main").Parse(TEMPLATE_CODE))
+var TEMPLATE_TABLE = template.Must(template.New("table").Parse(TEMPLATE_CODE_TABLE))
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	msg := r.FormValue("message")
 
@@ -63,9 +66,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		t := template.Must(template.New("Jointercept").Parse(TEMPLATE))
-		t.Execute(w, log)
+		TEMPLATE.Execute(w, log)
 	}
+}
+func handlerTable(w http.ResponseWriter, r *http.Request) {
+	TEMPLATE_TABLE.Execute(w, log)
 }
 
 func mkdir() {
@@ -97,6 +102,7 @@ func main() {
 	mkdir()
 
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/table", handlerTable)
 	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		stdutil.PrintErr("Error! Couldn't serve website", err)

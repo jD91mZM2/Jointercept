@@ -1,6 +1,6 @@
 package main
 
-const TEMPLATE = `
+const TEMPLATE_CODE = `
 <!DOCTYPE html>
 <html>
 	<head>
@@ -23,7 +23,10 @@ table{
 	width: 100%;
 	margin-top: 40px;
 	border-top: 1px solid black;
+	table-layout: fixed;
 }
+td:first-child{ width: 80%; overflow: hidden; }
+td:last-child{  width: 20%; text-align: right; }
 tr:hover{
 	background: #BFBFBF;
 }
@@ -32,6 +35,18 @@ tr:hover{
 	height: 20px;
 }
 		</style>
+		<script>
+setInterval(function(){
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if(xhttp.readyState == 4 && this.status == 200) {
+			document.getElementsByTagName("table")[0].innerHTML = this.responseText;
+		}
+	}
+	xhttp.open("GET", "/table", true);
+	xhttp.send();
+}, 3000);
+		</script>
 		<meta charset="UTF-8" />
 	</head>
 	<body>
@@ -41,14 +56,18 @@ tr:hover{
 			You can always change ports in arguments!
 
 			<table>
-				{{range .}}
-				<tr>
-					<td>{{.Msg}}</td>
-					<td>{{.Time}}</td>
-				</tr>
-				{{end}}
+` + TEMPLATE_CODE_TABLE + `
 			</table>
 		</div>
 	</body>
 </html>
+`
+
+const TEMPLATE_CODE_TABLE = `
+{{range .}}
+<tr>
+	<td>{{.Msg}}</td>
+	<td>{{.Time}}</td>
+</tr>
+{{end}}
 `
