@@ -4,11 +4,12 @@ Jointercept stands for Join Intercept and is a replacements for the buggy EventG
 Runs on:
 - Linux (Tested)
 - Windows (Fixed, thanks to [Kenneth Pang](https://plus.google.com/u/0/+KennethPang))
-- Should be able to be fixed quite easily. (maybe even renaming \_linux to \_whatever I don't know)
 
 ## Pros using Jointercept rather than a custom program:
 1. Compatibility with multiple programs!!
 2. Cleaner and easier code!
+3. See pushes log on a website.
+4. Programmed in Go. Speed is a must.
 ## Pros using Jointercept rather than a URL protocol:
 1. Intercept all messages rather than specific ones.
 2. Cross platform.
