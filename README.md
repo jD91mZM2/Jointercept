@@ -4,6 +4,7 @@ Jointercept stands for Join Intercept and is a replacements for the buggy EventG
 Runs on:
 - Linux (Tested)
 - Windows (Fixed, thanks to [Kenneth Pang](https://plus.google.com/u/0/+KennethPang))
+- Mac (Untested)
 
 ## Pros using Jointercept rather than a custom program:
 1. Compatibility with multiple programs!!
