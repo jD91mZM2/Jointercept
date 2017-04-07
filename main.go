@@ -33,7 +33,7 @@ var TEMPLATE = template.Must(template.New("main").Parse(TEMPLATE_CODE))
 var TEMPLATE_TABLE = template.Must(template.New("table").Parse(TEMPLATE_CODE_TABLE))
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	msg := r.FormValue("message")
+	msg := r.PostFormValue("message")
 
 	if msg != "" {
 		now := time.Now()
