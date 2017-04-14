@@ -1,5 +1,5 @@
 # Jointercept
-Jointercept stands for Join Intercept and is a replacements for the buggy EventGhost to instead launch your own programs!
+Jointercept stands for Join Intercept and is a replacement for the buggy EventGhost to instead launch your own programs!
 
 Runs on:
 - Linux (Tested)
