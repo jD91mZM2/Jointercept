@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/legolord208/stdutil"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -11,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/jD91mZM2/stdutil"
 )
 
 type logItem struct {
@@ -33,7 +34,7 @@ var TEMPLATE = template.Must(template.New("main").Parse(TEMPLATE_CODE))
 var TEMPLATE_TABLE = template.Must(template.New("table").Parse(TEMPLATE_CODE_TABLE))
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	msg := r.PostFormValue("message")
+	msg := r.FormValue("message")
 
 	if msg != "" {
 		now := time.Now()
